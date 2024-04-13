@@ -3,8 +3,16 @@ const app = express();
 require("dotenv").config();
 const port = process.env.PORT || 8000;
 const connectToDatabase = require("./config/db.config");
+const { notFound, errorHandler } = require("./middlewares/error");
+const register = require("./routes/auth/auth");
 
 connectToDatabase();
+
+app.use(express.json());
+app.use("/api/v1/auth", register);
+
+app.use(notFound);
+app.use(errorHandler);
 
 app
   .listen(port, () =>
