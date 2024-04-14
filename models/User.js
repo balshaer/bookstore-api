@@ -45,9 +45,9 @@ const UserSchema = mongoose.Schema(
       trim: true,
     },
 
-    registrationDate: {
+    createdAt: {
       type: Date,
-      default: date.now,
+      default: Date.now(),
     },
 
     role: {
