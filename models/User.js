@@ -43,6 +43,7 @@ const UserSchema = mongoose.Schema(
     phoneNumber: {
       type: String,
       trim: true,
+      unique: true,
     },
 
     createdAt: {
@@ -78,4 +79,15 @@ function registerValidation(obj) {
   userSchema.validate(obj);
 }
 
-module.exports = { User, registerValidation };
+function loginValidation(obj) {
+  const userSchema = Joi.object({
+    username: Joi.string().trim().min(3).max(30).required(),
+    email: Joi.string().trim().email().min(3).max(255).required(),
+    phoneNumber: Joi.string().trim(),
+    password: Joi.string().trim().min(8).max(255).required(),
+  });
+
+  userSchema.validate(obj);
+}
+
+module.exports = { User, registerValidation, loginValidation };

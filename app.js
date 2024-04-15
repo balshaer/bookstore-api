@@ -4,12 +4,15 @@ require("dotenv").config();
 const port = process.env.PORT || 8000;
 const connectToDatabase = require("./config/db.config");
 const { notFound, errorHandler } = require("./middlewares/error");
-const register = require("./routes/auth/auth");
+
+const registerRoute = require("./routes/auth/auth");
+const loginRouter = require("./routes/auth/auth");
 
 connectToDatabase();
 
 app.use(express.json());
-app.use("/api/v1/auth", register);
+app.use("/api/v1/auth", registerRoute);
+app.use("/api/v1/auth", loginRouter);
 
 app.use(notFound);
 app.use(errorHandler);
