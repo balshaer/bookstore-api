@@ -7,12 +7,9 @@ const registerController = asyncHandler(async (req, res) => {
   const error = registerValidation(req.body);
   const salt = await bcrypt.genSalt(10);
   const hash = await bcrypt.hash(req.body.password, salt);
-  const token = jwt.sign(
-    { id: req.body.id, createdAt: req.body.createdAt },
-    process.env.SECRET_KEY
-  );
 
   let user = await User.findOne({ email: req.body.email });
+
   let username = await User.findOne({ username: req.body.username });
   let phoneNumber = await User.findOne({ phoneNumber: req.body.phoneNumber });
 
@@ -45,14 +42,18 @@ const registerController = asyncHandler(async (req, res) => {
   });
   const result = await user.save();
 
-  const { password, ...other } = user._doc;
+  const { password, ...other } = result._doc;
+
+  const token = jwt.sign(
+    { id: user._id, role: user.role, isAdmin: user.isAdmin },
+    process.env.SECRET_KEY
+  );
 
   res.status(200).json({ ...other, token });
 });
 
 const loginController = asyncHandler(async (req, res) => {
   const { email, username, phoneNumber, password } = req.body;
-
 
   if (!email && !username && !phoneNumber) {
     return res
@@ -61,7 +62,7 @@ const loginController = asyncHandler(async (req, res) => {
   }
 
   let user;
-  
+
   if (email) {
     user = await User.findOne({ email });
   } else if (username) {
@@ -81,7 +82,7 @@ const loginController = asyncHandler(async (req, res) => {
   }
 
   const token = jwt.sign(
-    { id: user._id, role: user.role },
+    { id: user._id, role: user.role, isAdmin: user.isAdmin },
     process.env.SECRET_KEY
   );
 
