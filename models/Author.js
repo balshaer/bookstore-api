@@ -66,6 +66,7 @@ const authorSchema = new Schema(
 
 function authorValidation(obj) {
   const authorSchema = Joi.object({
+    fullName: Joi.string().trim().min(3).max(255).required(),
     username: Joi.string().trim().min(3).max(30).required(),
     email: Joi.string().trim().email().min(3).max(255).required(),
     phoneNumber: Joi.string().trim(),

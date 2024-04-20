@@ -1,5 +1,7 @@
 const asyncHandler = require("express-async-handler");
 const { Author } = require("../../models/Author");
+const { User } = require("../../models/User");
+const jwt = require("jsonwebtoken");
 
 const getAllAuthors = asyncHandler(async (req, res) => {
   const authors = await Author.find();
@@ -10,22 +12,21 @@ const getAllAuthors = asyncHandler(async (req, res) => {
 });
 
 const createAuthor = asyncHandler(async (req, res) => {
-  let authorEmail = await Author.findOne({ email: req.body.email });
-  let authorUsername = await Author.findOne({ email: req.body.username });
+  const checkAuthor = await Author.findOne({
+    $or: [{ email: req.body.email }, { username: req.body.username }],
+  });
 
-  if (authorUsername) {
+  const checkUser = await User.findOne({
+    $or: [{ email: req.body.email }, { username: req.body.username }],
+  });
+
+  if (checkAuthor || checkUser) {
     return res
       .status(400)
-      .json({ message: "this username has already been taken" });
+      .json({ message: "username ore email has already been taken" });
   }
 
-  if (authorEmail) {
-    return res
-      .status(400)
-      .json({ message: "this email has already been registerd" });
-  }
-
-  authorEmail = new Author({
+  const newAuthor = new Author({
     fullName: req.body.fullName,
     username: req.body.username,
     email: req.body.email,
@@ -33,12 +34,13 @@ const createAuthor = asyncHandler(async (req, res) => {
     password: req.body.password,
   });
 
-  const save = await authorEmail.save();
-
+  const save = await newAuthor.save();
 
   const { password, ...othre } = save._doc;
 
-  res.status(200).json(save);
+  const token = await jwt.sign({ id: req.body.id }, process.env.SECRET_KEY);
+
+  res.status(200).json({ ...othre, token });
 });
 
 module.exports = { getAllAuthors, createAuthor };
