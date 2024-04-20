@@ -19,8 +19,21 @@ function verifyToken(req, res, next) {
 function verifyTokenAndAuthorization(req, res, next) {
   verifyToken(req, res, () => {
     if (req.user.id === req.params.id || req.user.isAdmin === true) {
-      console.log("done");
+      next();
+    } else {
+      return res
+        .status(403)
+        .json({ message: "you're not allowed, only admin" });
+    }
+  });
+}
 
+function verifyTokenAndAuthor(req, res, next) {
+  verifyToken(req, res, () => {
+    if (
+      req.user.role === process.env.AUTHOR_ROLE ||
+      req.user.isAdmin === true
+    ) {
       next();
     } else {
       return res
@@ -31,11 +44,17 @@ function verifyTokenAndAuthorization(req, res, next) {
 }
 
 function verifyTokenAndAdmin(req, res, next) {
-  if (req.user.isAdmin) {
-    next();
-  } else {
-    res.status(403).json({ message: "you're not allowed, only admin2" });
-  }
+  verifyToken(req, res, () => {
+    if (req.user.isAdmin === true) {
+      next();
+    } else {
+      res.status(403).json({ message: "you're not allowed, only admin2" });
+    }
+  });
 }
 
-module.exports = { verifyTokenAndAuthorization, verifyTokenAndAdmin };
+module.exports = {
+  verifyTokenAndAuthorization,
+  verifyTokenAndAdmin,
+  verifyTokenAndAuthor,
+};

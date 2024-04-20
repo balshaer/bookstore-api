@@ -9,6 +9,7 @@ const registerRoute = require("./routes/auth/auth");
 const loginRouter = require("./routes/auth/auth");
 const userRouter = require("./routes/user/user");
 const booksRouter = require("./routes/books/books");
+const authorsRouter = require("./routes/authors/authors");
 
 connectToDatabase();
 
@@ -18,6 +19,8 @@ app.use("/api/v1/auth", loginRouter);
 app.use("/api/v1/user", userRouter);
 
 app.use("/api/v1/books", booksRouter);
+
+app.use("/api/v1/authors", authorsRouter);
 
 app.use(notFound);
 app.use(errorHandler);

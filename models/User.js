@@ -46,6 +46,12 @@ const UserSchema = mongoose.Schema(
       unique: true,
     },
 
+    role: {
+      type: String,
+      enum: [process.env.USER_ROLE, process.env.AUTHOR_ROLE],
+      default: process.env.USER_ROLE,
+    },
+
     createdAt: {
       type: Date,
       default: Date.now(),

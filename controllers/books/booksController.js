@@ -31,4 +31,43 @@ const getBooks = asyncHandler(async (req, res) => {
   res.status(200).json(getAllBooks);
 });
 
-module.exports = { createBook, getBooks };
+const getBookById = asyncHandler(async (req, res) => {
+  const book = await Books.findById(req.params.id);
+
+  if (!book) {
+    return res.status(404).json({ message: "book not found" });
+  }
+  res.status(200).json(book);
+});
+
+const deleteBook = asyncHandler(async (req, res) => {
+  const book = await Books.findByIdAndDelete(req.params.id);
+
+  if (!book) {
+    return res.status(404).json({ message: "book not found" });
+  }
+
+  res.status(200).json(book);
+});
+
+const editBook = asyncHandler(async (req, res) => {
+  const book = await Books.findByIdAndUpdate(
+    { _id: req.params.id },
+    {
+      $set: {
+        title: req.body.title,
+        author: req.body.author,
+        price: req.body.price,
+      },
+    },
+    { new: true }
+  );
+
+  if (!book) {
+    return res.status(404).json({ message: "book not found" });
+  }
+
+  res.status(200).json(book);
+});
+
+module.exports = { createBook, getBooks, getBookById, deleteBook, editBook };
