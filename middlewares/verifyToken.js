@@ -17,16 +17,15 @@ function verifyToken(req, res, next) {
 }
 
 function verifyTokenAndAuthorization(req, res, next) {
-  verifyToken(req, res, next, () => {
-    console.log("dd" + req.params.id);
-
+  verifyToken(req, res, () => {
     if (req.user.id === req.params.id || req.user.isAdmin === true) {
+      console.log("done");
+
       next();
-      console.log(req.user.id);
     } else {
       return res
         .status(403)
-        .json({ message: "you're not allowed, only admin1" });
+        .json({ message: "you're not allowed, only admin" });
     }
   });
 }
