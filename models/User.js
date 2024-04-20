@@ -54,16 +54,6 @@ const UserSchema = mongoose.Schema(
       type: Boolean,
       default: false,
     },
-
-    role: {
-      type: String,
-      default: process.env.USER_ROLE,
-      enum: [
-        process.env.USER_ROLE,
-        process.env.ADMIN_ROLE,
-        process.env.AUTHOR_ROLE,
-      ],
-    },
   },
   {}
 );
@@ -77,7 +67,6 @@ function registerValidation(obj) {
     fullName: Joi.string().min(2).max(255).required(),
     dateOfBirth: Joi.date(),
     phoneNumber: Joi.string().trim(),
-    role: Joi.string(),
   });
 
   userSchema.validate(obj);

@@ -45,7 +45,7 @@ const registerController = asyncHandler(async (req, res) => {
   const { password, ...other } = result._doc;
 
   const token = jwt.sign(
-    { id: user._id, role: user.role, isAdmin: user.isAdmin },
+    { id: user._id, isAdmin: user.isAdmin },
     process.env.SECRET_KEY
   );
 
@@ -82,7 +82,7 @@ const loginController = asyncHandler(async (req, res) => {
   }
 
   const token = jwt.sign(
-    { id: user._id, role: user.role, isAdmin: user.isAdmin },
+    { id: user._id, isAdmin: user.isAdmin },
     process.env.SECRET_KEY
   );
 
