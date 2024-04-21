@@ -2,6 +2,7 @@ const asyncHandler = require("express-async-handler");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { registerValidation, User } = require("../../models/User");
+const { Author } = require("../../models/Author");
 
 const registerController = asyncHandler(async (req, res) => {
   const error = registerValidation(req.body);
@@ -11,7 +12,14 @@ const registerController = asyncHandler(async (req, res) => {
   let user = await User.findOne({ email: req.body.email });
 
   let username = await User.findOne({ username: req.body.username });
-  let phoneNumber = await User.findOne({ phoneNumber: req.body.phoneNumber });
+
+  const checkPhoneAuthor = await Author.findOne({
+    phoneNumber: req.body.phoneNumber,
+  });
+
+  const checkPhoneUser = await User.findOne({
+    phoneNumber: req.body.phoneNumber,
+  });
 
   if (error) {
     return res.status(400).json({ message: error.details[0].message });
@@ -26,12 +34,9 @@ const registerController = asyncHandler(async (req, res) => {
       .json({ message: "This username is already beentaken" });
   }
 
-  if (phoneNumber) {
-    return res
-      .status(400)
-      .json({ message: "This phonenumber is already regsiter" });
+  if (checkPhoneUser || checkPhoneAuthor) {
+    return res.status(400).json({ message: "this phone is already taken" });
   }
-
   user = new User({
     username: req.body.username,
     email: req.body.email,
@@ -40,6 +45,7 @@ const registerController = asyncHandler(async (req, res) => {
     dateOfBirth: req.body.dateOfBirth,
     phoneNumber: req.body.phoneNumber,
   });
+
   const result = await user.save();
 
   const { password, ...other } = result._doc;
@@ -64,11 +70,15 @@ const loginController = asyncHandler(async (req, res) => {
   let user;
 
   if (email) {
-    user = await User.findOne({ email });
+    user = (await User.findOne({ email })) || (await Author.findOne({ email }));
   } else if (username) {
-    user = await User.findOne({ username });
+    user =
+      (await User.findOne({ username })) ||
+      (await Author.findOne({ username }));
   } else if (phoneNumber) {
-    user = await User.findOne({ phoneNumber });
+    user =
+      (await User.findOne({ phoneNumber })) ||
+      (await Author.findOne({ phoneNumber }));
   }
 
   if (!user) {

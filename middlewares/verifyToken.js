@@ -30,10 +30,7 @@ function verifyTokenAndAuthorization(req, res, next) {
 
 function verifyTokenAndAuthor(req, res, next) {
   verifyToken(req, res, () => {
-    if (
-      req.user.role === process.env.AUTHOR_ROLE ||
-      req.user.isAdmin === true
-    ) {
+    if (req.user.id === req.params.id || req.user.isAdmin === true) {
       next();
     } else {
       return res

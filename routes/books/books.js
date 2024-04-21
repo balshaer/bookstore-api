@@ -6,13 +6,16 @@ const {
   deleteBook,
   editBook,
 } = require("../../controllers/books/booksController");
-const { verifyTokenAndAuthor } = require("../../middlewares/verifyToken");
+const {
+  verifyTokenAndAuthor,
+  verifyTokenAndAdmin,
+} = require("../../middlewares/verifyToken");
 const router = express.Router();
 
-router.post("/create", createBook);
-router.get("/", getBooks);
-router.get("/:id", getBookById);
-router.delete("/:id", deleteBook);
+router.post("/create", verifyTokenAndAuthor, createBook);
+router.get("/", verifyTokenAndAuthor, getBooks);
+router.get("/:id", verifyTokenAndAuthor, getBookById);
+router.delete("/:id", verifyTokenAndAuthor, deleteBook);
 router.put("/:id", verifyTokenAndAuthor, editBook);
 
 module.exports = router;

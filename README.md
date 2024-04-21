@@ -16,6 +16,5 @@ This API is a basic example of a RESTful backend application built with Node.js,
 -   [Node.js](https://nodejs.org/en/)
 -   [Express](https://expressjs.com/)
 -   [MongoDB](https://www.mongodb.com/)
--   [Mongoose (ODM)](https://mongoosejs.com/)
 -   [JWT](https://www.npmjs.com/package/jsonwebtoken)
 

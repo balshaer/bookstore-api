@@ -71,7 +71,7 @@ function authorValidation(obj) {
     email: Joi.string().trim().email().min(3).max(255).required(),
     phoneNumber: Joi.string().trim(),
     password: Joi.string().trim().min(8).max(255).required(),
-  });
+});
 
   authorSchema.validate(obj);
 }
