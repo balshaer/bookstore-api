@@ -59,6 +59,14 @@ const UserSchema = mongoose.Schema(
       type: Boolean,
       default: false,
     },
+
+    profilePhoto: {
+      type: Object,
+      default: {
+        url: "https://img.icons8.com/fluency/48/user-male-circle--v1.png",
+        publicId: null,
+      },
+    },
   },
   {}
 );
