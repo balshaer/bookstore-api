@@ -2,9 +2,12 @@ const jwt = require("jsonwebtoken");
 
 function verifyToken(req, res, next) {
   const token = req.headers.token;
+
   if (token) {
+    const authToken = token.split(" ")[1];
+
     try {
-      const result = jwt.verify(token, process.env.SECRET_KEY);
+      const result = jwt.verify(authToken, process.env.SECRET_KEY);
       req.user = result;
       next();
     } catch (error) {
@@ -54,4 +57,5 @@ module.exports = {
   verifyTokenAndAuthorization,
   verifyTokenAndAdmin,
   verifyTokenAndAuthor,
+  verifyToken,
 };

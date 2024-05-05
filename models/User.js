@@ -1,5 +1,4 @@
 const Joi = require("joi");
-const { date } = require("joi");
 const mongoose = require("mongoose");
 const UserSchema = mongoose.Schema(
   {

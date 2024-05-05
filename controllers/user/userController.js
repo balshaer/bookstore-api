@@ -39,4 +39,12 @@ const deleteUser = asyncHandler(async (req, res) => {
   res.status(200).json(deleteUser);
 });
 
-module.exports = { editUser, deleteUser, showUser };
+const uploadUserProfilePicture = asyncHandler(async (req, res) => {
+  if (!req.file) {
+    return res.status(404).json({ message: "no file provided" });
+  }
+
+  return res.json({ message: "done" });
+});
+
+module.exports = { editUser, deleteUser, showUser, uploadUserProfilePicture };

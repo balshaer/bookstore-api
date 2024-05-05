@@ -2,7 +2,6 @@ const asyncHandler = require("express-async-handler");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { registerValidation, User } = require("../../models/User");
-const { Author } = require("../../models/Author");
 
 const registerController = asyncHandler(async (req, res) => {
   const error = registerValidation(req.body);
@@ -12,10 +11,6 @@ const registerController = asyncHandler(async (req, res) => {
   let user = await User.findOne({ email: req.body.email });
 
   let username = await User.findOne({ username: req.body.username });
-
-  const checkPhoneAuthor = await Author.findOne({
-    phoneNumber: req.body.phoneNumber,
-  });
 
   const checkPhoneUser = await User.findOne({
     phoneNumber: req.body.phoneNumber,
@@ -34,7 +29,7 @@ const registerController = asyncHandler(async (req, res) => {
       .json({ message: "This username is already beentaken" });
   }
 
-  if (checkPhoneUser || checkPhoneAuthor) {
+  if (checkPhoneUser) {
     return res.status(400).json({ message: "this phone is already taken" });
   }
   user = new User({
@@ -70,15 +65,11 @@ const loginController = asyncHandler(async (req, res) => {
   let user;
 
   if (email) {
-    user = (await User.findOne({ email })) || (await Author.findOne({ email }));
+    user = await User.findOne({ email });
   } else if (username) {
-    user =
-      (await User.findOne({ username })) ||
-      (await Author.findOne({ username }));
+    user = await User.findOne({ username });
   } else if (phoneNumber) {
-    user =
-      (await User.findOne({ phoneNumber })) ||
-      (await Author.findOne({ phoneNumber }));
+    user = await User.findOne({ phoneNumber });
   }
 
   if (!user) {
