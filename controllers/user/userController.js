@@ -59,7 +59,7 @@ const uploadUserProfilePicture = asyncHandler(async (req, res) => {
   }
   user.profilePhoto = {
     url: uploadimage.secure_url,
-    publicId: uploadimage.public_Id,
+    publicId: uploadimage.public_id,
   };
 
   if (user.profilePhoto && user.profilePhoto.publicId !== null) {
@@ -72,7 +72,7 @@ const uploadUserProfilePicture = asyncHandler(async (req, res) => {
     message: "your profile photo uploaded successfully",
     profilePhoto: {
       url: uploadimage.secure_url,
-      publicId: uploadimage.public_Id,
+      publicId: uploadimage.public_id,
     },
   });
 
